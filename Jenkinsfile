@@ -1,33 +1,28 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:14-alpine3.10'
-            args '-p 8081:8081'
-        }
-    }
+    agent { any }
 
     stages {
         stage('Build') {
             steps {
-                echo 'Running build inside node container'
-                sh 'npm install'
+                echo 'building docker image'
+                script {
+                    app = docker.build("yzchg/train-schedule")
+                    app.inside {
+                        sh 'echo $(curl localhost:8081)'
+                    }
+                }
             }
         }
-
-        stage('Test') {
+        stage('Publish') {
             steps {
-                echo 'Running test'
-                sh 'npm test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'start app'
-                sh 'npm start &'
-                input 'Is app running?'
+                echo 'publish docker image'
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+                }
             }
         }
     }
-
 }

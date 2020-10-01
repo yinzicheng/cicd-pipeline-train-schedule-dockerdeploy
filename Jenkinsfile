@@ -1,10 +1,15 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:14-alpine3.10'
+            args '-p 88:8080'
+        }
+    }
     stages {
         stage('Build') {
             steps {
-                echo 'Running build automation'
-                sh './gradlew build --no-daemon'
+                echo 'Running build inside node container'
+                sh 'npm install'
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }

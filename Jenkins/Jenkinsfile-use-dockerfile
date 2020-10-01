@@ -13,17 +13,10 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Running test'
-                sh 'npm test'
-            }
-        }
-        stage('Deploy') {
-            steps {
+        stage('Deploy'){
+            steps{
                 echo 'start app'
                 sh 'npm start &'
-                input 'Is app running?'
             }
         }
     }

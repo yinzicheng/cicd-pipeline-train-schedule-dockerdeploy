@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:14-alpine3.10'
+            args '-p 81:81'
         }
     }
 
@@ -23,15 +24,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'start app'
-//                sh 'npm start &'
-//                input 'Is app running?'
+                sh 'npm start &'
+                input 'Is app running?'
             }
-        }
-    }
-
-    post {
-        always {
-            archiveArtifacts artifacts: 'dist/trainSchedule.zip', fingerprint: true
         }
     }
 

@@ -22,25 +22,16 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                archiveArtifacts artifacts: 'dist/trainSchedule.zip'
-                withCredentials([usernamePassword(credentialsId: 'node1_ssh_userpass', usernameVariable: 'UNAME', passwordVariable: 'UPASS')]) {
-                    script {
-                        def remote = [:]
-                        remote.name = 'node1'
-                        remote.host = '192.168.1.130'
-                        remote.user = UNAME
-                        remote.password = UPASS
-                        remote.allowAnyHosts = true
-                        sshPut remote: remote, from: 'dist/trainSchedule.zip', into: '/tmp'
-                        sshCommand remote: remote, command: '''
-                            rm -rf /vagrant/jenkins/deploy/trainSchedule &&
-                            mkdir -p /vagrant/jenkins/deploy/trainSchedule &&
-                            unzip /tmp/trainSchedule.zip -d /vagrant/jenkins/deploy/trainSchedule &&
-                            /home/vagrant/.nvm/versions/node/v14.12.0/bin/npm start --prefix /vagrant/jenkins/deploy/trainSchedule &
-                        '''
-                    }
-                }
+                echo 'start app'
+//                sh 'npm start &'
+//                input 'Is app running?'
             }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'dist/trainSchedule.zip', fingerprint: true
         }
     }
 

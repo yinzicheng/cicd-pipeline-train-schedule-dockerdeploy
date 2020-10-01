@@ -35,12 +35,13 @@ pipeline {
                         remote.host = '192.168.1.130'
                         remote.user = USERNAME
                         remote.password = USERPASS
+                        remote.allowAnyHosts = true
                         try {
-                            sshCommand remote: remote, command: 'docker rm -f train-schedule'
+                            sshCommand remote: remote, command: "docker rm -f train-schedule"
                         } catch (err) {
                             echo: 'caught error: $err'
                         }
-                        sshCommand remote: remote, command: 'docker run --restart always --name train-schedule -dp 8081:8081 yzchg/train-schedule:${env.BUILD_NUMBER}'
+                        sshCommand remote: remote, command: "docker run --restart always --name train-schedule -dp 8081:8081 yzchg/train-schedule:${env.BUILD_NUMBER}"
                     }
                 }
             }

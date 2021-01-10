@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Build') {
             steps {
                 echo 'building docker image'
@@ -10,6 +11,7 @@ pipeline {
                 }
             }
         }
+
         stage('Publish') {
             steps {
                 echo 'publish docker image'
@@ -21,6 +23,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy to Production') {
             when {
                 branch 'master'

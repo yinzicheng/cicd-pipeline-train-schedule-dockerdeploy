@@ -6,9 +6,9 @@ pipeline {
     }
 
     stages {
-        stage('1. Package Code') {
+        stage('1. Build Image') {
             steps {
-                echo 'Package pyspark code'
+                echo 'Build docker image'
                 script {
                     app = docker.build("yzchg/$APP_NAME")
                     app.inside {
